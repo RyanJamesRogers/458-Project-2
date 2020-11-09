@@ -1,0 +1,47 @@
+% Input matrix B
+input = [0,1/12,1/5,0,0,1/12,0,0,0,0,0,0;
+    1,1/12,1/5,0,0,1/12,0,0,0,0,0,0;
+    0,1/12,0,0,0,1/12,1/2,0,0,0,0,0;
+    0,1/12,1/5,0,1/2,1/12,0,0,0,0,0,0;
+    0,1/12,1/5,0,0,1/12,0,0,0,0,0,0;
+    0,1/12,1/5,0,0,1/12,0,0,0,0,0,0;
+    0,1/12,0,1,1/2,1/12,0,0,0,0,0,0;
+    0,1/12,0,0,0,1/12,1/2,0,1,0,0,0;
+    0,1/12,0,0,0,1/12,0,1,0,0,0,0;
+    0,1/12,0,0,0,1/12,0,0,0,0,1,0;
+    0,1/12,0,0,0,1/12,0,0,0,0,0,1;
+    0,1/12,0,0,0,1/12,0,0,0,1,0,0;];
+% Entries are nonnegative and sum to 1 (distribution vector)
+A = input;
+x = vec2;
+% x = (1/12)*ones(12,1);
+% q = 1/12;
+% x = q:q:1;
+% x = x';
+plotdata = zeros();
+
+% Filling out a matrix whose columns will be the output distribution vectors
+count = 1;
+matrixofnorms = zeros(12,1);
+for i = 0.1:.1:.5
+    iter = 0;
+    alpha = i;
+    % Turn B into C
+    C = alpha*A + (1-alpha)*(x*ones(1,12));
+    while 1
+        xold = x;
+        x = C*x;
+        iter = iter + 1;
+        if norm(xold - x) < .000001
+            matrixofnorms(:,count) = x;
+           break
+        end
+    end
+    plotdata(count,1) = alpha;
+    plotdata(count,2) = iter;
+    count = count + 1;
+end
+plot(plotdata(:,1),plotdata(:,2))
+final = sortrows(plotdata,2,'descend');
+% Alpha which caused the most iterations
+final(1,:);
